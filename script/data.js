@@ -1,78 +1,6 @@
-   // Sample video data with vibrant theme
-    const videos = [
-      {
-        title: "4K Mountain Sunrise Timelapse",
-        src: "https://files.catbox.moe/abcd12.mp4",
-        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
-        duration: "4:32",
-        views: "1.2M",
-        featured: true,
-        description: "Beautiful sunrise over mountain peaks captured in 4K resolution."
-      },
-      {
-        title: "Ocean Waves Relaxation Video",
-        src: "https://files.catbox.moe/qojnj5.mp4",
-        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
-        duration: "8:15",
-        views: "856K",
-        list: "nature",
-        description: "Soothing ocean waves for relaxation and meditation."
-      },
-      {
-        title: "City Nightlife Timelapse",
-        src: "https://files.catbox.moe/abcd12.mp4",
-        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
-        duration: "3:45",
-        views: "2.1M",
-        list: "urban",
-        description: "Vibrant city lights and nightlife in fast motion."
-      },
-      {
-        title: "Abstract Liquid Motion",
-        src: "https://files.catbox.moe/qojnj5.mp4",
-        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
-        duration: "2:56",
-        views: "745K",
-        featured: true,
-        description: "Mesmerizing abstract liquid patterns in 4K slow motion."
-      },
-      {
-        title: "Northern Lights in Iceland",
-        src: "https://files.catbox.moe/abcd12.mp4",
-        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
-        duration: "6:42",
-        views: "1.5M",
-        featured: true,
-        description: "Aurora borealis dancing across the Icelandic sky."
-      },
-      {
-        title: "Desert Sand Dunes",
-        src: "https://files.catbox.moe/qojnj5.mp4",
-        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
-        duration: "4:10",
-        views: "920K",
-        list: "travel",
-        description: "Golden sand dunes stretching to the horizon."
-      },
-      {
-        title: "Colorful Festival Lights",
-        src: "https://files.catbox.moe/abcd12.mp4",
-        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
-        duration: "5:22",
-        views: "1.1M",
-        list: "events",
-        description: "Vibrant festival lights from around the world."
-      },
-      {
-        title: "Sunset Beach Vibes",
-        src: "https://files.catbox.moe/qojnj5.mp4",
-        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
-        duration: "7:18",
-        views: "1.3M",
-        list: "nature",
-        description: "Relaxing sunset at a tropical beach."
-      }
-    ];
+  // Sample video data with working video URLs
+
+
 
     // DOM Elements
     const container = document.getElementById('container');
@@ -81,9 +9,25 @@
     const closeModal = document.getElementById('closeModal');
     const themeToggle = document.getElementById('themeToggle');
     const featuredBtn = document.getElementById('featuredBtn');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const countdown = document.getElementById('countdown');
+    const progressBar = document.getElementById('progressBar');
+    const shareModal = document.getElementById('shareModal');
+    const shareClose = document.getElementById('shareClose');
+    const shareThumbnail = document.getElementById('shareThumbnail');
+    const shareTitle = document.getElementById('shareTitle');
+    const shareLink = document.getElementById('shareLink');
+    const copyLink = document.getElementById('copyLink');
+    const facebookShare = document.getElementById('facebookShare');
+    const twitterShare = document.getElementById('twitterShare');
+    const whatsappShare = document.getElementById('whatsappShare');
+    const directShare = document.getElementById('directShare');
 
     // App State
     let darkMode = false;
+    let currentVideo = null;
+    let countdownInterval = null;
+    let progressInterval = null;
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
@@ -124,7 +68,11 @@
         const row = document.createElement('div');
         row.className = 'playlist-row';
         
-        vids.forEach(v => row.appendChild(createCard(v)));
+        vids.forEach(v => {
+          const card = createCard(v);
+          card.setAttribute('data-video-id', v.id);
+          row.appendChild(card);
+        });
         
         block.appendChild(header);
         block.appendChild(row);
@@ -152,7 +100,11 @@
         header.innerHTML = '<i class="fas fa-bolt"></i> Featured Videos';
         container.appendChild(header);
         
-        singles.forEach(v => singleBlock.appendChild(createCard(v)));
+        singles.forEach(v => {
+          const card = createCard(v);
+          card.setAttribute('data-video-id', v.id);
+          singleBlock.appendChild(card);
+        });
         container.appendChild(singleBlock);
       }
     }
@@ -175,6 +127,11 @@
       const playIcon = document.createElement('div');
       playIcon.className = 'play-icon';
       playIcon.innerHTML = '<i class="fas fa-play"></i>';
+
+      // Share button
+      const shareBtn = document.createElement('button');
+      shareBtn.className = 'share-btn';
+      shareBtn.innerHTML = '<i class="fas fa-share-alt"></i>';
 
       // Video info
       const info = document.createElement('div');
@@ -203,42 +160,90 @@
       // Assemble card
       thumbWrap.appendChild(img);
       thumbWrap.appendChild(playIcon);
+      thumbWrap.appendChild(shareBtn);
       thumbWrap.appendChild(duration);
 
       card.appendChild(thumbWrap);
       card.appendChild(info);
 
-      // Click handler - Removed loading delay
+      // Click handler - Now with loading animation
       card.addEventListener('click', (e) => {
         if (e.target.closest('button, a')) return;
-        openVideoPlayer(video);
+        currentVideo = video;
+        startLoadingAnimation(video);
+      });
+
+      // Share button click
+      shareBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openShareModal(video);
       });
 
       // Hover effects
       card.addEventListener('mouseenter', () => {
         img.style.transform = 'scale(1.1)';
+        shareBtn.style.opacity = '1';
       });
       
       card.addEventListener('mouseleave', () => {
         img.style.transform = 'scale(1)';
+        shareBtn.style.opacity = '0';
       });
 
       return card;
     }
 
-    // Open video in modal player
+    // Start 7-second loading animation
+    function startLoadingAnimation(video) {
+      loadingOverlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      
+      let seconds = 7;
+      countdown.textContent = seconds;
+      
+      // Update countdown every second
+      countdownInterval = setInterval(() => {
+        seconds--;
+        countdown.textContent = seconds;
+        
+        if (seconds <= 0) {
+          clearInterval(countdownInterval);
+          openVideoPlayer(video);
+        }
+      }, 1000);
+      
+      // Update progress bar
+      let progress = 0;
+      const increment = 100 / 70; // 70 increments over 7 seconds
+      
+      progressInterval = setInterval(() => {
+        progress += increment;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+        
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+        }
+      }, 100);
+    }
+
+    // Open video in modal player after loading
     function openVideoPlayer(video) {
+      loadingOverlay.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      
+      clearInterval(countdownInterval);
+      clearInterval(progressInterval);
+      
       mainPlayer.src = video.src;
       mainPlayer.poster = video.thumb;
       videoModal.classList.add('active');
       document.body.style.overflow = 'hidden';
       
-      // Try to autoplay (may be blocked by browser)
+      // Try to autoplay
       const playPromise = mainPlayer.play();
       
       if (playPromise !== undefined) {
         playPromise.catch(error => {
-          // Autoplay was prevented
           mainPlayer.controls = true;
         });
       }
@@ -249,6 +254,33 @@
       videoModal.classList.remove('active');
       mainPlayer.pause();
       document.body.style.overflow = 'auto';
+    }
+
+    // Open share modal
+    function openShareModal(video) {
+      shareThumbnail.src = video.thumb;
+      shareTitle.textContent = video.title;
+      
+      // Generate shareable link
+      const currentUrl = window.location.href.split('?')[0];
+      const shareUrl = `${currentUrl}?video=${video.id}`;
+      shareLink.value = shareUrl;
+      
+      // Set social share links
+      const encodedUrl = encodeURIComponent(shareUrl);
+      const encodedTitle = encodeURIComponent(`Watch "${video.title}" on MY TUBE`);
+      
+      facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+      twitterShare.href = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+      whatsappShare.href = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
+      directShare.href = shareUrl;
+      
+      shareModal.classList.add('active');
+    }
+
+    // Close share modal
+    function closeShareModal() {
+      shareModal.classList.remove('active');
     }
 
     // Toggle dark mode
@@ -306,7 +338,6 @@
         if (featuredSection) {
           featuredSection.scrollIntoView({ behavior: 'smooth' });
           
-          // Add pulse animation to featured cards
           const featuredCards = document.querySelectorAll('.featured-badge');
           featuredCards.forEach(card => {
             card.style.animation = 'pulse 0.5s 3';
@@ -316,4 +347,41 @@
           });
         }
       });
+      
+      // Share modal
+      shareClose.addEventListener('click', closeShareModal);
+      
+      // Copy link button
+      copyLink.addEventListener('click', () => {
+        shareLink.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const originalText = copyLink.innerHTML;
+        copyLink.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+          copyLink.innerHTML = originalText;
+        }, 2000);
+      });
+      
+      // Check for video parameter in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoId = urlParams.get('video');
+      
+      if (videoId) {
+        const video = videos.find(v => v.id === videoId);
+        if (video) {
+          // Scroll to video and highlight it
+          setTimeout(() => {
+            const card = document.querySelector(`[data-video-id="${videoId}"]`);
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.style.boxShadow = '0 0 0 3px var(--primary)';
+              setTimeout(() => {
+                card.style.boxShadow = '';
+              }, 3000);
+            }
+          }, 1000);
+        }
+      }
     }
