@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MY TUBE | Video Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #ec4899; /* Vibrant pink */
+      --primary-dark: #db2777; /* Darker pink */
+      --secondary: #f43f5e; /* Red */
+      --accent: #a855f7; /* Purple */
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --gray-dark: #64748b;
+      --radius: 16px;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Light mode defaults */
+      --bg-color: #fdf2f8; /* Light pink background */
+      --text-color: #1e293b;
+      --card-bg: white;
+      --header-bg: white;
+      --border-color: #fbcfe8; /* Light pink border */
+    }
+
+    .dark-mode {
+      --bg-color: #1e1b4b; /* Deep purple */
+      --text-color: #f8fafc;
+      --card-bg: #312e81; /* Dark purple */
+      --header-bg: #312e81;
+      --border-color: #4c1d95;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    header {
+      background: var(--header-bg);
+      padding: 1rem 2rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-decoration: none;
+    }
+
+    .logo i {
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn i {
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover i {
+      transform: scale(1.1);
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(0, 0, 0, 0.1);
+      transform: rotate(30deg);
+    }
+
+    main {
+      padding: 2rem;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin: 1.5rem 0 1rem;
+      color: var(--text-color);
+      font-weight: 600;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h2 i {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Hero Banner */
+    .hero {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 3rem;
+      height: 500px;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .hero:hover .hero-video {
+      transform: scale(1.02);
+    }
+
+    .hero-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 3rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      color: white;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.8s ease-out 0.3s forwards;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #fecdd3, #f9a8d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      max-width: 600px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    /* Playlist Styles */
+    .playlist {
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .playlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .playlist-controls {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .playlist-controls button {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--gray-dark);
+      display: flex;
+      align-items: center;
+    }
+
+    .playlist-controls button:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .playlist-row {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      padding: 1.5rem 0.5rem;
+      scroll-behavior: smooth;
+    }
+
+    .playlist-row::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .playlist-row::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 10px;
+    }
+
+    .playlist-row::-webkit-scrollbar-track {
+      background: var(--border-color);
+      border-radius: 10px;
+    }
+
+    /* Video Card Styles */
+    .video-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      min-width: 300px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      transform: translateY(0);
+      will-change: transform;
+      border: 1px solid var(--border-color);
+    }
+
+    .video-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .video-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .video-card:hover::before {
+      opacity: 1;
+    }
+
+    .thumb-wrapper {
+      position: relative;
+      overflow: hidden;
+      background: var(--border-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      aspect-ratio: 16 / 9;
+    }
+
+    .thumb-wrapper img,
+    .thumb-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: var(--transition);
+    }
+
+    .thumb-wrapper video {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(255, 255, 255, 0.9);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--primary);
+      font-size: 1.75rem;
+      opacity: 0;
+      transition: var(--transition);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+    }
+
+    .video-card:hover .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .info {
+      padding: 1rem; /* Reduced padding to make title bar smaller */
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem; /* Reduced gap */
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 1rem; /* Smaller font size */
+      color: var(--text-color);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--gray);
+      font-size: 0.75rem; /* Smaller font size */
+    }
+
+    .loading-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 3;
+      display: none;
+    }
+
+    .loading-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Premium features */
+    .featured-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .duration {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      z-index: 2;
+    }
+
+    /* Video Player Modal - Made larger */
+    .video-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .video-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .video-container {
+      width: 95%; /* Increased width */
+      max-width: 1400px; /* Larger max width */
+      height: 80vh; /* Takes 80% of viewport height */
+      position: relative;
+      transform: scale(0.95);
+      transition: var(--transition);
+    }
+
+    .video-modal.active .video-container {
+      transform: scale(1);
+    }
+
+    .video-container video {
+      width: 100%;
+      height: 100%; /* Make video fill container */
+      border-radius: var(--radius);
+      outline: none;
+      box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.25);
+      object-fit: contain; /* Ensure video is fully visible */
+      background: black;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: -50px;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .close-modal:hover {
+      color: var(--primary);
+      transform: rotate(90deg);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .video-card {
+      animation: fadeInUp 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    .video-card:nth-child(1) { animation-delay: 0.1s; }
+    .video-card:nth-child(2) { animation-delay: 0.2s; }
+    .video-card:nth-child(3) { animation-delay: 0.3s; }
+    .video-card:nth-child(4) { animation-delay: 0.4s; }
+    .video-card:nth-child(5) { animation-delay: 0.5s; }
+    .video-card:nth-child(6) { animation-delay: 0.6s; }
+    .video-card:nth-child(7) { animation-delay: 0.7s; }
+    .video-card:nth-child(8) { animation-delay: 0.8s; }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    .float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero {
+        height: 400px;
+      }
+      
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .video-container {
+        width: 90%;
+        height: 60vh;
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 1.5rem;
+      }
+      
+      .hero {
+        height: 350px;
+      }
+      
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-content {
+        padding: 2rem;
+      }
+      
+      .playlist-row {
+        gap: 1rem;
+      }
+      
+      .video-card {
+        min-width: 260px;
+      }
+      
+      .video-container {
+        width: 95%;
+        height: 50vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 1rem;
+      }
+      
+      .logo span {
+        display: none;
+      }
+      
+      .hero {
+        height: 300px;
+      }
+      
+      .hero-title {
+        font-size: 1.75rem;
+      }
+      
+      .hero-content {
+        padding: 1.5rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .video-container {
+        width: 98%;
+        height: 40vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">
+      <i class="fas fa-play-circle"></i>
+      <span>MY TUBE</span> <!-- Changed to MY TUBE -->
+    </a>
+    <div class="header-controls">
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="btn pulse" id="featuredBtn">
+        <i class="fas fa-bolt"></i>
+        <span class="desktop-text">Featured</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div id="container"></div>
+  </main>
+
+  <!-- Video Player Modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-container">
+      <button class="close-modal" id="closeModal">
+        <i class="fas fa-times"></i>
+      </button>
+      <video id="mainPlayer" controls autoplay> <!-- Added autoplay -->
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <script>
+    // Sample video data with vibrant theme
+    const videos = [
+      {
+        title: "4K Mountain Sunrise Timelapse",
+        src: "https://files.catbox.moe/abcd12.mp4",
+        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
+        duration: "4:32",
+        views: "1.2M",
+        featured: true,
+        description: "Beautiful sunrise over mountain peaks captured in 4K resolution."
+      },
+      {
+        title: "Ocean Waves Relaxation Video",
+        src: "https://files.catbox.moe/qojnj5.mp4",
+        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
+        duration: "8:15",
+        views: "856K",
+        list: "nature",
+        description: "Soothing ocean waves for relaxation and meditation."
+      },
+      {
+        title: "City Nightlife Timelapse",
+        src: "https://files.catbox.moe/abcd12.mp4",
+        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
+        duration: "3:45",
+        views: "2.1M",
+        list: "urban",
+        description: "Vibrant city lights and nightlife in fast motion."
+      },
+      {
+        title: "Abstract Liquid Motion",
+        src: "https://files.catbox.moe/qojnj5.mp4",
+        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
+        duration: "2:56",
+        views: "745K",
+        featured: true,
+        description: "Mesmerizing abstract liquid patterns in 4K slow motion."
+      },
+      {
+        title: "Northern Lights in Iceland",
+        src: "https://files.catbox.moe/abcd12.mp4",
+        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
+        duration: "6:42",
+        views: "1.5M",
+        featured: true,
+        description: "Aurora borealis dancing across the Icelandic sky."
+      },
+      {
+        title: "Desert Sand Dunes",
+        src: "https://files.catbox.moe/qojnj5.mp4",
+        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
+        duration: "4:10",
+        views: "920K",
+        list: "travel",
+        description: "Golden sand dunes stretching to the horizon."
+      },
+      {
+        title: "Colorful Festival Lights",
+        src: "https://files.catbox.moe/abcd12.mp4",
+        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
+        duration: "5:22",
+        views: "1.1M",
+        list: "events",
+        description: "Vibrant festival lights from around the world."
+      },
+      {
+        title: "Sunset Beach Vibes",
+        src: "https://files.catbox.moe/qojnj5.mp4",
+        thumb: "https://i.imgur.com/U4l7qzY.jpeg",
+        duration: "7:18",
+        views: "1.3M",
+        list: "nature",
+        description: "Relaxing sunset at a tropical beach."
+      }
+    ];
+
+    // DOM Elements
+    const container = document.getElementById('container');
+    const videoModal = document.getElementById('videoModal');
+    const mainPlayer = document.getElementById('mainPlayer');
+    const closeModal = document.getElementById('closeModal');
+    const themeToggle = document.getElementById('themeToggle');
+    const featuredBtn = document.getElementById('featuredBtn');
+
+    // App State
+    let darkMode = false;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderVideos();
+      setupEventListeners();
+      checkDarkModePreference();
+    });
+
+    // Group videos
+    function renderVideos() {
+      const grouped = {};
+      const singles = [];
+
+      videos.forEach(v => {
+        if (v.list) {
+          if (!grouped[v.list]) grouped[v.list] = [];
+          grouped[v.list].push(v);
+        } else {
+          singles.push(v);
+        }
+      });
+
+      // Create playlist sections
+      Object.entries(grouped).forEach(([group, vids]) => {
+        const block = document.createElement('div');
+        block.className = 'playlist';
+        
+        const header = document.createElement('div');
+        header.className = 'playlist-header';
+        header.innerHTML = `
+          <h2><i class="fas fa-${getPlaylistIcon(group)}"></i> ${group.charAt(0).toUpperCase() + group.slice(1)}</h2>
+          <div class="playlist-controls">
+            <button class="scroll-left"><i class="fas fa-chevron-left"></i></button>
+            <button class="scroll-right"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        `;
+        
+        const row = document.createElement('div');
+        row.className = 'playlist-row';
+        
+        vids.forEach(v => row.appendChild(createCard(v)));
+        
+        block.appendChild(header);
+        block.appendChild(row);
+        container.appendChild(block);
+        
+        // Add scroll controls
+        const scrollLeft = block.querySelector('.scroll-left');
+        const scrollRight = block.querySelector('.scroll-right');
+        
+        scrollLeft.addEventListener('click', () => {
+          row.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        
+        scrollRight.addEventListener('click', () => {
+          row.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+      });
+
+      // Create featured videos section
+      if (singles.length) {
+        const singleBlock = document.createElement('div');
+        singleBlock.className = 'single-videos';
+        
+        const header = document.createElement('h2');
+        header.innerHTML = '<i class="fas fa-bolt"></i> Featured Videos';
+        container.appendChild(header);
+        
+        singles.forEach(v => singleBlock.appendChild(createCard(v)));
+        container.appendChild(singleBlock);
+      }
+    }
+
+    // Create video card element
+    function createCard(video) {
+      const card = document.createElement('div');
+      card.className = 'video-card';
+
+      // Thumbnail wrapper
+      const thumbWrap = document.createElement('div');
+      thumbWrap.className = 'thumb-wrapper';
+
+      // Thumbnail image
+      const img = document.createElement('img');
+      img.src = video.thumb;
+      img.alt = video.title;
+
+      // Play icon
+      const playIcon = document.createElement('div');
+      playIcon.className = 'play-icon';
+      playIcon.innerHTML = '<i class="fas fa-play"></i>';
+
+      // Video info
+      const info = document.createElement('div');
+      info.className = 'info';
+      info.innerHTML = `
+        <div class="title">${video.title}</div>
+        <div class="meta">
+          <span>${video.views} views</span>
+          <span><i class="fas fa-thumbs-up"></i> ${formatLikes(video.views)}</span>
+        </div>
+      `;
+
+      // Duration badge
+      const duration = document.createElement('div');
+      duration.className = 'duration';
+      duration.textContent = video.duration;
+
+      // Featured badge
+      if (video.featured) {
+        const featuredBadge = document.createElement('div');
+        featuredBadge.className = 'featured-badge';
+        featuredBadge.innerHTML = '<i class="fas fa-bolt"></i> Featured';
+        thumbWrap.appendChild(featuredBadge);
+      }
+
+      // Assemble card
+      thumbWrap.appendChild(img);
+      thumbWrap.appendChild(playIcon);
+      thumbWrap.appendChild(duration);
+
+      card.appendChild(thumbWrap);
+      card.appendChild(info);
+
+      // Click handler - Removed loading delay
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('button, a')) return;
+        openVideoPlayer(video);
+      });
+
+      // Hover effects
+      card.addEventListener('mouseenter', () => {
+        img.style.transform = 'scale(1.1)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        img.style.transform = 'scale(1)';
+      });
+
+      return card;
+    }
+
+    // Open video in modal player
+    function openVideoPlayer(video) {
+      mainPlayer.src = video.src;
+      mainPlayer.poster = video.thumb;
+      videoModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Try to autoplay (may be blocked by browser)
+      const playPromise = mainPlayer.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          // Autoplay was prevented
+          mainPlayer.controls = true;
+        });
+      }
+    }
+
+    // Close video modal
+    function closeVideoPlayer() {
+      videoModal.classList.remove('active');
+      mainPlayer.pause();
+      document.body.style.overflow = 'auto';
+    }
+
+    // Toggle dark mode
+    function toggleDarkMode() {
+      darkMode = !darkMode;
+      if (darkMode) {
+        document.body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        document.body.classList.remove('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        localStorage.setItem('darkMode', 'disabled');
+      }
+    }
+
+    // Check user's dark mode preference
+    function checkDarkModePreference() {
+      const savedMode = localStorage.getItem('darkMode');
+      if (savedMode === 'enabled') {
+        darkMode = true;
+        document.body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+    }
+
+    // Helper functions
+    function getPlaylistIcon(category) {
+      const icons = {
+        nature: 'leaf',
+        urban: 'city',
+        travel: 'plane',
+        events: 'calendar-star',
+        music: 'music'
+      };
+      return icons[category] || 'play-circle';
+    }
+
+    function formatLikes(views) {
+      const num = parseInt(views.replace(/[^\d]/g, ''));
+      return Math.round(num * 0.1).toLocaleString();
+    }
+
+    // Event listeners setup
+    function setupEventListeners() {
+      // Video modal
+      closeModal.addEventListener('click', closeVideoPlayer);
+      
+      // Theme toggle
+      themeToggle.addEventListener('click', toggleDarkMode);
+      
+      // Featured button
+      featuredBtn.addEventListener('click', () => {
+        const featuredSection = document.querySelector('.single-videos');
+        if (featuredSection) {
+          featuredSection.scrollIntoView({ behavior: 'smooth' });
+          
+          // Add pulse animation to featured cards
+          const featuredCards = document.querySelectorAll('.featured-badge');
+          featuredCards.forEach(card => {
+            card.style.animation = 'pulse 0.5s 3';
+            setTimeout(() => {
+              card.style.animation = '';
+            }, 1500);
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>
