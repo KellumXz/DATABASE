@@ -6,7 +6,7 @@
         thumb: "https://i.imgur.com/xHkNjmw.jpeg",
         duration: "4:32",
         views: "122",
-        featured: true,
+        
         description: "Beautiful sunrise over mountain peaks captured in 4K resolution."
       },
       {
