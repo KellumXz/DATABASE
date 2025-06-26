@@ -5,7 +5,7 @@
         src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         thumb: "https://i.imgur.com/xHkNjmw.jpeg",
         duration: "4:32",
-        views: "1.2M",
+        views: "122",
         featured: true,
         description: "Beautiful sunrise over mountain peaks captured in 4K resolution."
       },
@@ -16,7 +16,7 @@
         thumb: "https://i.imgur.com/U4l7qzY.jpeg",
         duration: "8:15",
         views: "856K",
-        list: "nature",
+        list: "කැම්පස් අක්කා",
         description: "Soothing ocean waves for relaxation and meditation."
       },
       {
@@ -26,7 +26,7 @@
         thumb: "https://i.imgur.com/xHkNjmw.jpeg",
         duration: "3:45",
         views: "2.1M",
-        list: "urban",
+        list: "කැම්පස් අක්කා",
         description: "Vibrant city lights and nightlife in fast motion."
       },
       {
