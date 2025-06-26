@@ -2,7 +2,7 @@
  {
         id: 'mountain-sunrise',
         title: "අම්මො එක 🙂",
-        src: "https://github.com/KalumX/site-database/blob/main/5_6251386562173474229.mp4",
+        src: "https://ik.imagekit.io/fuckyouuuur/5_6251386562173474229.mp4",
         thumb: "https://i.imgur.com/xHkNjmw.jpeg",
         duration: "4:32",
         views: "122",
