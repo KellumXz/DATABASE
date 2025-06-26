@@ -3,7 +3,7 @@
         id: 'mountain-sunrise',
         title: "අම්මො එක 🙂",
         src: "https://ik.imagekit.io/fuckyouuuur/5_6251386562173474229.mp4",
-        thumb: "https://i.imgur.com/xHkNjmw.jpeg",
+        thumb: "https://i.ibb.co/NdhrW51N/IMG-20250626-WA0002.jpg",
         duration: "4:32",
         views: "122",
         
