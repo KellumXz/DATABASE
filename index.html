@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #ec4899; /* Vibrant pink */
-      --primary-dark: #db2777; /* Darker pink */
-      --secondary: #f43f5e; /* Red */
-      --accent: #a855f7; /* Purple */
+      --primary: #ec4899;
+      --primary-dark: #db2777;
+      --secondary: #f43f5e;
+      --accent: #a855f7;
       --dark: #1e293b;
       --light: #f8fafc;
       --gray: #94a3b8;
@@ -19,19 +19,17 @@
       --radius: 16px;
       --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
       --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      /* Light mode defaults */
-      --bg-color: #fdf2f8; /* Light pink background */
+      --bg-color: #fdf2f8;
       --text-color: #1e293b;
       --card-bg: white;
       --header-bg: white;
-      --border-color: #fbcfe8; /* Light pink border */
+      --border-color: #fbcfe8;
     }
 
     .dark-mode {
-      --bg-color: #1e1b4b; /* Deep purple */
+      --bg-color: #1e1b4b;
       --text-color: #f8fafc;
-      --card-bg: #312e81; /* Dark purple */
+      --card-bg: #312e81;
       --header-bg: #312e81;
       --border-color: #4c1d95;
     }
@@ -154,7 +152,6 @@
       color: transparent;
     }
 
-    /* Hero Banner */
     .hero {
       position: relative;
       border-radius: var(--radius);
@@ -213,7 +210,6 @@
       gap: 1.5rem;
     }
 
-    /* Playlist Styles */
     .playlist {
       margin-bottom: 4rem;
       position: relative;
@@ -271,7 +267,6 @@
       border-radius: 10px;
     }
 
-    /* Video Card Styles */
     .video-card {
       background: var(--card-bg);
       border-radius: var(--radius);
@@ -361,15 +356,15 @@
     }
 
     .info {
-      padding: 1rem; /* Reduced padding to make title bar smaller */
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem; /* Reduced gap */
+      gap: 0.5rem;
     }
 
     .title {
       font-weight: 600;
-      font-size: 1rem; /* Smaller font size */
+      font-size: 1rem;
       color: var(--text-color);
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -381,28 +376,61 @@
       display: flex;
       justify-content: space-between;
       color: var(--gray);
-      font-size: 0.75rem; /* Smaller font size */
+      font-size: 0.75rem;
     }
 
-    .loading-container {
-      position: absolute;
+    .loading-overlay {
+      position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      z-index: 3;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
       display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      color: white;
+      font-size: 1.5rem;
     }
 
-    .loading-bar {
+    .loading-spinner {
+      width: 80px;
+      height: 80px;
+      border: 8px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+      margin-bottom: 2rem;
+    }
+
+    .loading-progress {
+      width: 300px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .loading-progress-bar {
       height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
       width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
       transition: width 0.1s linear;
     }
 
-    /* Premium features */
+    .loading-countdown {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 1rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
     .featured-badge {
       position: absolute;
       top: 12px;
@@ -430,10 +458,28 @@
       z-index: 2;
     }
 
-    /* Video Player Modal - Made larger */
+    .share-btn {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      z-index: 2;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .video-card:hover .share-btn {
+      opacity: 1;
+    }
+
     .video-modal {
       position: fixed;
-      top: 0;
+      top: 12px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -453,9 +499,10 @@
     }
 
     .video-container {
-      width: 95%; /* Increased width */
-      max-width: 1400px; /* Larger max width */
-      height: 80vh; /* Takes 80% of viewport height */
+      width: 95%;
+      max-width: 1400px;
+      height: 80vh;
+      margin-top:14px;
       position: relative;
       transform: scale(0.95);
       transition: var(--transition);
@@ -467,11 +514,11 @@
 
     .video-container video {
       width: 100%;
-      height: 100%; /* Make video fill container */
+      height: 100%;
       border-radius: var(--radius);
       outline: none;
       box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.25);
-      object-fit: contain; /* Ensure video is fully visible */
+      object-fit: contain;
       background: black;
     }
 
@@ -492,7 +539,143 @@
       transform: rotate(90deg);
     }
 
-    /* Animations */
+    .share-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1001;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .share-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .share-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .share-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--gray-dark);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .share-preview {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .share-thumbnail {
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 16/9;
+    }
+
+    .share-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .share-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: var(--text-color);
+    }
+
+    .share-url {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .share-url input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .share-url button {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 0 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .share-url button:hover {
+      transform: translateY(-2px);
+    }
+
+    .share-social {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .share-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .share-social a:hover {
+      transform: translateY(-3px) scale(1.1);
+    }
+
+    .share-social a.facebook {
+      background: #3b5998;
+    }
+
+    .share-social a.twitter {
+      background: #1da1f2;
+    }
+
+    .share-social a.whatsapp {
+      background: #25d366;
+    }
+
+    .share-social a.link {
+      background: var(--gray-dark);
+    }
+
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -508,6 +691,10 @@
       0% { transform: translateY(0px); }
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0px); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .video-card {
@@ -532,7 +719,6 @@
       animation: float 4s ease-in-out infinite;
     }
 
-    /* Responsive */
     @media (max-width: 1024px) {
       .hero {
         height: 400px;
@@ -614,6 +800,18 @@
         width: 98%;
         height: 40vh;
       }
+      
+      .share-container {
+        padding: 1.5rem;
+      }
+      
+      .share-url {
+        flex-direction: column;
+      }
+      
+      .share-url button {
+        padding: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -621,7 +819,7 @@
   <header>
     <a href="#" class="logo">
       <i class="fas fa-play-circle"></i>
-      <span>MY TUBE</span> <!-- Changed to MY TUBE -->
+      <span>SEXY-X</span>
     </a>
     <div class="header-controls">
       <button class="theme-toggle" id="themeToggle">
@@ -629,7 +827,7 @@
       </button>
       <button class="btn pulse" id="featuredBtn">
         <i class="fas fa-bolt"></i>
-        <span class="desktop-text">Featured</span>
+        <span class="desktop-text">NEW VIDEOS</span>
       </button>
     </div>
   </header>
@@ -644,11 +842,49 @@
       <button class="close-modal" id="closeModal">
         <i class="fas fa-times"></i>
       </button>
-      <video id="mainPlayer" controls autoplay> <!-- Added autoplay -->
+      <video id="mainPlayer" controls>
         Your browser does not support the video tag.
       </video>
     </div>
   </div>
-<script src="script/data.js"></script> 
+
+  <!-- Share Modal -->
+  <div class="share-modal" id="shareModal">
+    <div class="share-container">
+      <button class="share-close" id="shareClose">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="share-preview">
+        <div class="share-thumbnail">
+          <img id="shareThumbnail" src="" alt="Video thumbnail">
+        </div>
+        <h3 class="share-title" id="shareTitle"></h3>
+      </div>
+      <div class="share-url">
+        <input type="text" id="shareLink" readonly>
+        <button id="copyLink">
+          <i class="fas fa-copy"></i>
+        </button>
+      </div>
+      <div class="share-social">
+        <a href="#" class="facebook" id="facebookShare"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="twitter" id="twitterShare"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="whatsapp" id="whatsappShare"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="link" id="directShare"><i class="fas fa-link"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div>Loading your video...</div>
+    <div class="loading-countdown" id="countdown">7</div>
+    <div class="loading-progress">
+      <div class="loading-progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+<script src="Videos.js"></script> 
+<script src="script/data.js"></script>  
 </body>
 </html>
